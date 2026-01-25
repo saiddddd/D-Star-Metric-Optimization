@@ -26,7 +26,7 @@ notebooks/[finalized] updated_result.ipynb
 To verify the stability of the metric across different scales and parameters:
 
 
-Practical UtilityThe _D*_ metric can be utilized to design adaptive search policies. Examples of its application include:Search Mode Switching: Transitioning between exploration and local search operators based on _D*_ thresholds.Parameter Adaptation: Dynamically adjusting mutation rates or selection pressure to counteract premature convergence.
+Practical UtilityThe D* metric can be utilized to design adaptive search policies. Examples of its application include:Search Mode Switching: Transitioning between exploration and local search operators based on D* thresholds.Parameter Adaptation: Dynamically adjusting mutation rates or selection pressure to counteract premature convergence.
 
 Supplementary Materials
 All raw data, statistical test results, and additional high-resolution plots are included in the notebooks/ directory to ensure full transparency of the reported results.
