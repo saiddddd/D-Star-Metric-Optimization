@@ -1,0 +1,122 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{geometry}
+
+\geometry{
+    a4paper,
+    margin=1in
+}
+
+\title{Proposed Effectiveness Evaluation Framework}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Proposed Effectiveness Evaluation Framework}
+
+This work introduces a general framework for evaluating the \textbf{effectiveness}
+of population-based metaheuristic algorithms.  
+Unlike classical benchmarking, which focuses solely on final objective values,
+the proposed framework analyses the \textbf{optimization dynamics}
+through normalized diversity, exploration--exploitation behaviour,
+AUC indicators, and convergence iteration.
+
+\section{Normalized Positional Diversity}
+
+Let $X=\{x_1,\dots,x_N\}\subset \mathbb{R}^d$ denote a population
+and let $\ell, u \in \mathbb{R}^d$ be the lower and upper bounds.  
+Each individual is normalized as:
+\[
+y_i = \frac{x_i - \ell}{u - \ell}.
+\]
+
+Pairwise distances are computed as:
+\[
+d_{ij} = \frac{\|y_i - y_j\|_2}{\sqrt{d}}.
+\]
+
+The proposed normalized diversity index is:
+\[
+D^{*} = 
+\frac{2}{N(N-1)} 
+\sum_{1 \le i < j \le N} d_{ij}.
+\]
+
+Relative diversity progression is defined as:
+\[
+D_{\text{rel}}(t)
+= 
+\frac{D^{*}(t)}{D^{*}(0) + \varepsilon},
+\]
+where $\varepsilon$ prevents division by zero.
+A rapid decay of $D_{\text{rel}}(t)$ indicates premature convergence.
+
+\section{Exploration--Exploitation Quantification}
+
+Exploration and exploitation are derived directly from relative diversity:
+\[
+E(t) = 100 \cdot D_{\text{rel}}(t), 
+\qquad 
+X(t) = 100 \cdot (1 - D_{\text{rel}}(t)).
+\]
+
+High $E(t)$ reflects wide, global search behaviour,
+while high $X(t)$ corresponds to intensified local search.
+
+\section{AUC Indicators}
+
+To summarise exploration and exploitation over the entire optimization horizon,
+we compute the Area Under Curve (AUC):
+\[
+\mathrm{AUC}_E 
+= \frac{1}{T} \int_0^T E(t)\, dt,
+\qquad
+\mathrm{AUC}_X 
+= \frac{1}{T} \int_0^T X(t)\, dt.
+\]
+
+These provide single scalar descriptors of how much exploration
+or exploitation occurred throughout the optimization process.
+
+\section{Convergence Iteration}
+
+Convergence is detected when relative diversity falls below a threshold~$\tau$:
+\[
+D_{\text{rel}}(t) < \tau.
+\]
+The first iteration that satisfies this condition is recorded as
+the \emph{convergence iteration}.
+
+\section{Evaluation Procedure}
+
+Each benchmark function is executed over multiple independent runs.
+For every run we record:
+
+\begin{itemize}
+    \item best objective value,
+    \item final and average diversity,
+    \item mean exploration and exploitation,
+    \item AUC of exploration and exploitation,
+    \item number of function evaluations (FE),
+    \item convergence iteration.
+\end{itemize}
+
+These aggregated metrics (\textit{mean}, \textit{std}, \textit{median}, \textit{best}, \textit{worst})
+yield an overview of algorithmic behaviour
+independent of population size, dimensionality, or search-space scale.
+
+\section{Application to the Grey Wolf Optimizer}
+
+When applied to the Grey Wolf Optimizer (GWO) on benchmark function F1,
+the proposed framework revealed a very rapid collapse in positional diversity,
+followed by an early shift into full exploitation.
+This behaviour aligns with the well-known tendency of GWO to experience premature convergence
+and highlights the sensitivity and diagnostic value of the proposed evaluation framework.
+
+\end{document}
