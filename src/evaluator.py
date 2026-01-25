@@ -46,12 +46,12 @@ def summarize_run(record, conv_threshold_rel=0.1):
     D0 = record["D0"]
     safe_D0 = D0 if D0 > 1e-15 else (np.max(div) if np.max(div) > 1e-15 else 1.0)
     
-    # Normalisasi untuk perhitungan konvergensi
+    
     D_rel_star = div / (safe_D0 + 1e-12)
     expl_star = np.nan_to_num(record["exploration_hist"], nan=0.0)
     exploit_star = np.nan_to_num(record["exploitation_hist"], nan=100.0)
     
-    # Metrik Hussain (diambil dari diversity yang sama)
+    
     expl_h, exploit_h = get_hussain_expl_exploit(div)
     max_h = np.max(div) if np.max(div) > 1e-15 else 1.0
     D_rel_h = div / (max_h + 1e-12)
@@ -60,23 +60,23 @@ def summarize_run(record, conv_threshold_rel=0.1):
     idx_5 = max(1, int(0.05 * n_total))
     idx_10 = max(1, int(0.10 * n_total))
     
-    # 1. Early Exploration (Poin krusial dari Prof. Ajaz)
+    
     early_5_star = np.mean(expl_star[:idx_5])
     early_10_star = np.mean(expl_star[:idx_10])
     early_5_h = np.mean(expl_h[:idx_5])
     early_10_h = np.mean(expl_h[:idx_10])
     
-    # 2. AUC (Area Under Curve)
+    
     auc_expl_star = np.trapz(expl_star, dx=1) / n_total
     auc_exploit_star = np.trapz(exploit_star, dx=1) / n_total
     auc_expl_h = np.trapz(expl_h, dx=1) / n_total
     auc_exploit_h = np.trapz(exploit_h, dx=1) / n_total
     
-    # 3. Convergence Iteration (Time-to-target proxy)
+    
     conv_star = next((i for i, v in enumerate(D_rel_star) if v < conv_threshold_rel), n_total - 1)
     conv_h = next((i for i, v in enumerate(D_rel_h) if v < conv_threshold_rel), n_total - 1)
     
-    # 4. Crossover Point (Transisi Explore ke Exploit)
+   
     xover_star = next((i for i, (a, b) in enumerate(zip(expl_star, exploit_star)) if b > a), n_total)
     xover_h = next((i for i, (a, b) in enumerate(zip(expl_h, exploit_h)) if b > a), n_total)
     
@@ -263,3 +263,4 @@ def generate_correlation_report(df_ind, output_dir):
     df_corr = pd.DataFrame(corr_list)
     df_corr.to_csv(os.path.join(output_dir, "Correlation_Report.csv"), index=False)
     return df_corr
+
